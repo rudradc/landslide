@@ -1,0 +1,798 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Disaster Risk Assessment & Relocation Decision Support System</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Leaflet CSS & JS CDN -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <!-- Chart.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <!-- Lucide Icons CDN -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <!-- Axios CDN -->
+  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+  <!-- Google Fonts Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Inter', sans-serif; }
+    .glass-card { background: rgba(15, 23, 42, 0.85); backdrop-filter: blur(12px); border: 1px solid rgba(51, 65, 85, 0.7); border-radius: 0.75rem; }
+    .leaflet-container { width: 100%; height: 100%; background: #090d16 !important; border-radius: 0.75rem; }
+    .leaflet-popup-content-wrapper, .leaflet-popup-tip { background: #0f172a !important; color: #f8fafc !important; border: 1px solid #334155; }
+  </style>
+</head>
+<body class="bg-slate-950 text-slate-100 antialiased min-h-screen flex flex-col">
+  <div id="app" class="flex flex-col min-h-screen"></div>
+
+  <script>
+    // System Global State & API Engine
+    const API_BASE = '/api';
+    let state = {
+      token: localStorage.getItem('token') || null,
+      user: JSON.parse(localStorage.getItem('user') || 'null'),
+      activeTab: 'dashboard',
+      summary: null,
+      habitations: [],
+      relocationSites: [],
+      mlPerformance: null,
+      mcdaConfig: null,
+      selectedHabitation: null,
+      filterDistrict: 'All',
+      filterRisk: 'All',
+      searchQuery: '',
+      loading: false,
+      error: ''
+    };
+
+    // Axios API Interceptor
+    const api = axios.create({ baseURL: API_BASE });
+    api.interceptors.request.use(config => {
+      if (state.token) config.headers.Authorization = `Bearer ${state.token}`;
+      return config;
+    });
+
+    // Helper Functions
+    function getRiskColor(cat) {
+      switch (cat) {
+        case 'Critical': return '#EF4444';
+        case 'High': return '#F97316';
+        case 'Moderate': return '#F59E0B';
+        default: return '#10B981';
+      }
+    }
+
+    // Main App Renderer
+    async function renderApp() {
+      const container = document.getElementById('app');
+      if (!state.token || !state.user) {
+        container.innerHTML = renderLogin();
+        lucide.createIcons();
+        return;
+      }
+
+      container.innerHTML = `
+        <div class="flex h-screen w-screen overflow-hidden bg-slate-950">
+          ${renderSidebar()}
+          <div className="flex flex-1 flex-col overflow-hidden w-full">
+            ${renderNavbar()}
+            <main id="main-content" class="flex-1 overflow-y-auto bg-slate-950 p-6">
+              ${renderTabContent()}
+            </main>
+          </div>
+        </div>
+      `;
+      lucide.createIcons();
+      postRender();
+    }
+
+    // Render Login Screen
+    function renderLogin() {
+      return `
+        <div class="flex min-h-screen w-full items-center justify-center bg-slate-950 px-4">
+          <div class="glass-card relative w-full max-w-md p-8 border-slate-800 shadow-2xl">
+            <div class="mb-6 text-center">
+              <div class="mx-auto mb-3 flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-tr from-blue-600 to-indigo-500 shadow-lg shadow-blue-500/25">
+                <i data-lucide="shield" class="h-7 w-7 text-white"></i>
+              </div>
+              <h2 class="text-2xl font-bold tracking-tight text-white">Disaster Risk DSS</h2>
+              <p class="mt-1 text-xs text-slate-400">Intelligent Red-Zone Identification & Relocation System</p>
+            </div>
+
+            ${state.error ? `<div class="mb-4 rounded-lg bg-red-950/80 p-3 border border-red-800 text-xs text-red-300 text-center">${state.error}</div>` : ''}
+
+            <form onsubmit="handleLogin(event)" class="space-y-4">
+              <div>
+                <label class="mb-1 block text-xs font-semibold text-slate-300">Official Email</label>
+                <input id="email" type="email" required value="admin@disaster.gov.in" class="w-full rounded-lg border border-slate-800 bg-slate-950/80 py-2 px-3 text-xs text-white placeholder-slate-600 focus:border-blue-500 focus:outline-none" />
+              </div>
+
+              <div>
+                <label class="mb-1 block text-xs font-semibold text-slate-300">Password</label>
+                <input id="password" type="password" required value="admin123" class="w-full rounded-lg border border-slate-800 bg-slate-950/80 py-2 px-3 text-xs text-white placeholder-slate-600 focus:border-blue-500 focus:outline-none" />
+              </div>
+
+              <button type="submit" class="flex w-full items-center justify-center gap-2 rounded-lg bg-blue-600 py-2.5 text-xs font-bold text-white transition-all hover:bg-blue-500">
+                <span>Sign In to Disaster Portal</span>
+                <i data-lucide="arrow-right" class="h-4 w-4"></i>
+              </button>
+            </form>
+
+            <div class="mt-6 border-t border-slate-800/80 pt-4">
+              <p class="mb-2.5 text-[11px] font-semibold text-slate-400 text-center">Quick Role Login Shortcuts:</p>
+              <div class="grid grid-cols-2 gap-2 text-[10px]">
+                <button onclick="setCredentials('admin@disaster.gov.in', 'admin123')" class="rounded border border-purple-800/50 bg-purple-950/30 p-2 text-purple-300 hover:bg-purple-900/50 text-left">
+                  <div class="font-bold">System Admin</div>
+                  <div class="text-[9px] text-purple-400">admin@disaster.gov.in</div>
+                </button>
+                <button onclick="setCredentials('authority@disaster.gov.in', 'authority123')" class="rounded border border-amber-800/50 bg-amber-950/30 p-2 text-amber-300 hover:bg-amber-900/50 text-left">
+                  <div class="font-bold">Disaster Authority</div>
+                  <div class="text-[9px] text-amber-400">authority@disaster.gov.in</div>
+                </button>
+                <button onclick="setCredentials('analyst@disaster.gov.in', 'analyst123')" class="rounded border border-blue-800/50 bg-blue-950/30 p-2 text-blue-300 hover:bg-blue-900/50 text-left">
+                  <div class="font-bold">Risk Analyst</div>
+                  <div class="text-[9px] text-blue-400">analyst@disaster.gov.in</div>
+                </button>
+                <button onclick="setCredentials('viewer@disaster.gov.in', 'viewer123')" class="rounded border border-slate-700 bg-slate-800/50 p-2 text-slate-300 hover:bg-slate-800 text-left">
+                  <div class="font-bold">Public Viewer</div>
+                  <div class="text-[9px] text-slate-400">viewer@disaster.gov.in</div>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    function setCredentials(e, p) {
+      document.getElementById('email').value = e;
+      document.getElementById('password').value = p;
+    }
+
+    async function handleLogin(e) {
+      e.preventDefault();
+      state.error = '';
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+      try {
+        const res = await api.post('/auth/login', { email, password });
+        state.token = res.data.access_token;
+        state.user = res.data.user;
+        localStorage.setItem('token', state.token);
+        localStorage.setItem('user', JSON.stringify(state.user));
+        await loadAllData();
+        renderApp();
+      } catch (err) {
+        state.error = err.response?.data?.detail || 'Authentication failed.';
+        renderApp();
+      }
+    }
+
+    function handleLogout() {
+      localStorage.removeItem('token');
+      localStorage.removeItem('user');
+      state.token = null;
+      state.user = null;
+      renderApp();
+    }
+
+    // Data Load Pipeline
+    async function loadAllData() {
+      if (!state.token) return;
+      try {
+        const [sumRes, habRes, siteRes, configRes] = await Promise.all([
+          api.get('/analysis/summary'),
+          api.get('/habitations?limit=500'),
+          api.get('/relocation/sites'),
+          api.get('/config/weights')
+        ]);
+        state.summary = sumRes.data;
+        state.habitations = habRes.data;
+        state.relocationSites = siteRes.data;
+        state.mcdaConfig = configRes.data;
+      } catch (err) {
+        console.error("Failed to fetch backend data:", err);
+      }
+    }
+
+    // Sidebar & Navbar
+    function renderNavbar() {
+      return `
+        <header class="flex h-16 w-full items-center justify-between border-b border-slate-800 bg-slate-900/90 px-6 backdrop-blur-md">
+          <div class="flex items-center gap-3">
+            <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-tr from-blue-600 to-indigo-500 shadow-lg shadow-blue-500/20">
+              <i data-lucide="shield" class="h-5 w-5 text-white"></i>
+            </div>
+            <div>
+              <h1 class="text-base font-bold tracking-tight text-white">Disaster Risk DSS</h1>
+              <p class="text-xs text-slate-400">Intelligent Red-Zone Identification & Relocation System</p>
+            </div>
+          </div>
+
+          <div class="flex items-center gap-4">
+            <div class="flex items-center gap-3 border-l border-slate-800 pl-4">
+              <div className="hidden text-right md:block">
+                <p class="text-xs font-semibold text-slate-200">${state.user.full_name}</p>
+                <span class="inline-block rounded-full border px-2 py-0.5 text-[10px] font-bold bg-blue-950 text-blue-300 border-blue-800">
+                  ${state.user.role_name}
+                </span>
+              </div>
+              <button onclick="handleLogout()" title="Logout" class="flex h-9 w-9 items-center justify-center rounded-lg border border-slate-800 bg-slate-900 text-slate-400 hover:bg-slate-800 hover:text-red-400 transition-colors">
+                <i data-lucide="log-out" class="h-4 w-4"></i>
+              </button>
+            </div>
+          </div>
+        </header>
+      `;
+    }
+
+    function renderSidebar() {
+      const items = [
+        { id: 'dashboard', label: 'Executive Dashboard', icon: 'layout-dashboard' },
+        { id: 'gis-map', label: 'Interactive GIS Map', icon: 'map' },
+        { id: 'habitations', label: 'Habitation Registry', icon: 'home' },
+        { id: 'relocation', label: 'Relocation Target Sites', icon: 'map-pin' },
+        { id: 'ml-studio', label: 'AI/ML & XAI Studio', icon: 'brain-circuit' },
+        { id: 'data-upload', label: 'Data Ingestion & CSV', icon: 'upload-cloud' },
+        { id: 'settings', label: 'Model Configuration', icon: 'sliders' },
+      ];
+
+      return `
+        <aside class="flex w-64 flex-col border-r border-slate-800 bg-slate-900/90 p-4">
+          <div class="mb-4 px-3 py-2">
+            <p class="text-[11px] font-bold uppercase tracking-wider text-slate-500">Navigation Modules</p>
+          </div>
+          <nav class="flex flex-1 flex-col gap-1.5">
+            ${items.map(item => `
+              <button onclick="switchTab('${item.id}')" class="flex items-center gap-3 rounded-lg px-3 py-2.5 text-xs font-medium transition-all ${state.activeTab === item.id ? 'bg-blue-600/10 text-blue-400 border border-blue-500/20 shadow-sm' : 'text-slate-400 hover:bg-slate-800/60 hover:text-slate-200'}">
+                <i data-lucide="${item.icon}" class="h-4 w-4 shrink-0"></i>
+                <span>${item.label}</span>
+              </button>
+            `).join('')}
+          </nav>
+          <div class="mt-auto border-t border-slate-800/80 pt-4">
+            <div class="rounded-lg bg-slate-950/60 p-3 border border-slate-800/80 text-[10px] text-slate-400">
+              <div class="flex items-center gap-1.5 text-amber-400 font-bold mb-1">
+                <i data-lucide="alert-triangle" class="h-3.5 w-3.5"></i>
+                <span>Decision Support Only</span>
+              </div>
+              Final relocation directives require field validation by disaster authorities.
+            </div>
+          </div>
+        </aside>
+      `;
+    }
+
+    function switchTab(tabId) {
+      state.activeTab = tabId;
+      state.selectedHabitation = null;
+      renderApp();
+    }
+
+    // Render Active Tab Content
+    function renderTabContent() {
+      if (state.selectedHabitation) {
+        return renderHabitationDetail(state.selectedHabitation);
+      }
+      switch (state.activeTab) {
+        case 'dashboard': return renderDashboard();
+        case 'gis-map': return renderGisMap();
+        case 'habitations': return renderHabitationsRegistry();
+        case 'relocation': return renderRelocationSites();
+        case 'ml-studio': return renderMlStudio();
+        case 'data-upload': return renderDataUpload();
+        case 'settings': return renderSettings();
+        default: return renderDashboard();
+      }
+    }
+
+    // Dashboard View
+    function renderDashboard() {
+      const s = state.summary || {};
+      return `
+        <div class="space-y-6">
+          <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+            <div>
+              <h2 class="text-xl font-bold tracking-tight text-white">Disaster Management Executive Dashboard</h2>
+              <p class="text-xs text-slate-400">Habitation hazard-prone red zone monitoring & relocation priority analytics</p>
+            </div>
+            <button onclick="triggerRunAnalysis()" class="flex items-center justify-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-xs font-bold text-white shadow-lg shadow-blue-600/20 hover:bg-blue-500">
+              <i data-lucide="play" class="h-4 w-4"></i>
+              <span>Run Risk Scoring Engine</span>
+            </button>
+          </div>
+
+          <!-- 6 KPI Metric Cards -->
+          <div class="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-6">
+            <div class="glass-card p-4 border-l-4 border-l-slate-400">
+              <span class="text-[11px] font-semibold text-slate-400 block">Total Habitations</span>
+              <p class="mt-2 text-2xl font-black text-white">${s.total_habitations || 0}</p>
+              <p class="mt-1 text-[10px] text-slate-400">Monitored In System</p>
+            </div>
+
+            <div class="glass-card p-4 border-l-4 border-l-red-500">
+              <span class="text-[11px] font-semibold text-red-400 block">Critical Red Zones</span>
+              <p class="mt-2 text-2xl font-black text-red-400">${s.critical_zones || 0}</p>
+              <p class="mt-1 text-[10px] text-red-400/80">Immediate Review</p>
+            </div>
+
+            <div class="glass-card p-4 border-l-4 border-l-orange-500">
+              <span class="text-[11px] font-semibold text-orange-400 block">High Risk Zones</span>
+              <p class="mt-2 text-2xl font-black text-orange-400">${s.high_risk_zones || 0}</p>
+              <p class="mt-1 text-[10px] text-orange-400/80">High Exposure</p>
+            </div>
+
+            <div class="glass-card p-4 border-l-4 border-l-amber-500">
+              <span class="text-[11px] font-semibold text-amber-400 block">Moderate Risk</span>
+              <p class="mt-2 text-2xl font-black text-amber-400">${s.moderate_risk_zones || 0}</p>
+              <p class="mt-1 text-[10px] text-amber-400/80">Monitor Conditions</p>
+            </div>
+
+            <div class="glass-card p-4 border-l-4 border-l-emerald-500">
+              <span class="text-[11px] font-semibold text-emerald-400 block">Low Risk Zones</span>
+              <p class="mt-2 text-2xl font-black text-emerald-400">${s.low_risk_zones || 0}</p>
+              <p class="mt-1 text-[10px] text-emerald-400/80">Stable Safety Limits</p>
+            </div>
+
+            <div class="glass-card p-4 border-l-4 border-l-blue-500">
+              <span class="text-[11px] font-semibold text-blue-400 block">Overcapacity</span>
+              <p class="mt-2 text-2xl font-black text-blue-400">${s.overcapacity_habitations || 0}</p>
+              <p class="mt-1 text-[10px] text-blue-400/80">Exceeds Capacity</p>
+            </div>
+          </div>
+
+          <!-- Analytical Charts Row -->
+          <div class="grid grid-cols-1 gap-6 lg:grid-cols-2">
+            <div class="glass-card p-5">
+              <h3 class="text-sm font-bold text-white mb-4">Risk Category Distribution</h3>
+              <div class="h-64 flex justify-center items-center">
+                <canvas id="riskPieChart" class="max-h-60"></canvas>
+              </div>
+            </div>
+
+            <div class="glass-card p-5">
+              <h3 class="text-sm font-bold text-white mb-4">Population vs Safe Estimated Capacity</h3>
+              <div class="h-64 flex justify-center items-center">
+                <canvas id="capacityBarChart" class="max-h-60"></canvas>
+              </div>
+            </div>
+          </div>
+
+          <!-- Quick Map Preview & Top High Risk Habitations -->
+          <div class="grid grid-cols-1 gap-6 lg:grid-cols-3">
+            <div class="glass-card p-5 lg:col-span-2">
+              <div class="flex items-center justify-between mb-4">
+                <h3 className="text-sm font-bold text-white flex items-center gap-2">
+                  <i data-lucide="map-pin" class="h-4 w-4 text-blue-400"></i>
+                  <span>GIS Spatial Distribution Quick-Map</span>
+                </h3>
+                <button onclick="switchTab('gis-map')" class="text-xs font-semibold text-blue-400 hover:underline">
+                  Open Fullscreen GIS Map →
+                </button>
+              </div>
+              <div id="quick-map" class="h-72 w-full rounded-xl overflow-hidden border border-slate-800"></div>
+            </div>
+
+            <div class="glass-card p-5">
+              <h3 class="text-sm font-bold text-white mb-4 flex items-center gap-2">
+                <i data-lucide="shield-alert" class="h-4 w-4 text-red-400"></i>
+                <span>Top High-Priority Habitations</span>
+              </h3>
+              <div class="space-y-3 overflow-y-auto max-h-72 pr-1">
+                ${state.habitations.filter(h => h.risk?.risk_category === 'Critical' || h.risk?.risk_category === 'High').slice(0, 5).map(hab => `
+                  <div class="rounded-lg bg-slate-950/70 p-3 border border-slate-800">
+                    <div class="flex items-center justify-between">
+                      <span class="text-xs font-bold text-white">${hab.name}</span>
+                      <span class="rounded-full px-2 py-0.5 text-[9px] font-bold text-white" style="background-color: ${getRiskColor(hab.risk?.risk_category)}">
+                        ${hab.risk?.risk_category} (${hab.risk?.overall_risk_score})
+                      </span>
+                    </div>
+                    <div class="mt-2 flex items-center justify-between text-[10px] text-slate-400">
+                      <span>Pop: ${hab.population}</span>
+                      <span>Overcapacity: +${hab.capacity?.overcapacity_count || 0}</span>
+                    </div>
+                    <div class="mt-2 border-t border-slate-800/60 pt-2 flex justify-between items-center">
+                      <span class="text-[10px] text-amber-400 font-medium">Priority: ${hab.priority?.priority_score}</span>
+                      <button onclick="viewHabitationDetail('${hab.id}')" class="text-[10px] text-blue-400 hover:underline font-semibold">
+                        View Details →
+                      </button>
+                    </div>
+                  </div>
+                `).join('')}
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    // GIS Fullscreen Map View
+    function renderGisMap() {
+      return `
+        <div class="relative h-full w-full min-h-[calc(100vh-8rem)] rounded-xl overflow-hidden border border-slate-800">
+          <div id="full-gis-map" class="h-full w-full"></div>
+        </div>
+      `;
+    }
+
+    // Habitations Registry View
+    function renderHabitationsRegistry() {
+      const filtered = state.habitations.filter(h => {
+        const matchSearch = h.name.toLowerCase().includes(state.searchQuery.toLowerCase()) || h.habitation_code.toLowerCase().includes(state.searchQuery.toLowerCase());
+        const matchDistrict = state.filterDistrict === 'All' || h.district === state.filterDistrict;
+        const matchRisk = state.filterRisk === 'All' || h.risk?.risk_category === state.filterRisk;
+        return matchSearch && matchDistrict && matchRisk;
+      });
+
+      const districts = ['All', ...new Set(state.habitations.map(h => h.district))];
+
+      return `
+        <div class="space-y-6">
+          <div>
+            <h2 class="text-xl font-bold tracking-tight text-white">Habitation Management Registry</h2>
+            <p class="text-xs text-slate-400">Search, filter, and manage habitation spatial profiles and risk metrics</p>
+          </div>
+
+          <div class="glass-card p-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+            <div class="relative flex-1 max-w-md">
+              <input type="text" value="${state.searchQuery}" oninput="state.searchQuery = this.value; renderApp();" placeholder="Search by name or code..." class="w-full rounded-lg border border-slate-800 bg-slate-950/80 py-2 px-3 text-xs text-white placeholder-slate-600 focus:outline-none" />
+            </div>
+            <div class="flex items-center gap-3 text-xs">
+              <select onchange="state.filterDistrict = this.value; renderApp();" class="rounded-lg border border-slate-800 bg-slate-950 py-1.5 px-3 text-white">
+                ${districts.map(d => `<option value="${d}" ${state.filterDistrict === d ? 'selected' : ''}>${d}</option>`).join('')}
+              </select>
+              <select onchange="state.filterRisk = this.value; renderApp();" class="rounded-lg border border-slate-800 bg-slate-950 py-1.5 px-3 text-white">
+                <option value="All">All Risk Tiers</option>
+                <option value="Critical" ${state.filterRisk === 'Critical' ? 'selected' : ''}>Critical (Red)</option>
+                <option value="High" ${state.filterRisk === 'High' ? 'selected' : ''}>High (Orange)</option>
+                <option value="Moderate" ${state.filterRisk === 'Moderate' ? 'selected' : ''}>Moderate (Yellow)</option>
+                <option value="Low" ${state.filterRisk === 'Low' ? 'selected' : ''}>Low (Green)</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="glass-card overflow-hidden">
+            <div class="overflow-x-auto">
+              <table class="w-full text-left text-xs">
+                <thead class="bg-slate-950 text-[11px] uppercase tracking-wider text-slate-400 border-b border-slate-800">
+                  <tr>
+                    <th class="p-3.5 font-semibold">Code / Name</th>
+                    <th class="p-3.5 font-semibold">District</th>
+                    <th class="p-3.5 font-semibold">Coordinates</th>
+                    <th class="p-3.5 font-semibold">Population</th>
+                    <th class="p-3.5 font-semibold">Slope / Rainfall</th>
+                    <th class="p-3.5 font-semibold">Hazard</th>
+                    <th class="p-3.5 font-semibold">Capacity</th>
+                    <th class="p-3.5 font-semibold">Risk Tier</th>
+                    <th class="p-3.5 font-semibold text-right">Actions</th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-800/60">
+                  ${filtered.map(hab => `
+                    <tr class="hover:bg-slate-800/40">
+                      <td class="p-3.5">
+                        <div class="font-bold text-white">${hab.name}</div>
+                        <div class="text-[10px] text-slate-500">${hab.habitation_code}</div>
+                      </td>
+                      <td class="p-3.5 text-slate-300">${hab.district}</td>
+                      <td class="p-3.5 text-slate-400 font-mono text-[10px]">${hab.latitude.toFixed(3)}°N, ${hab.longitude.toFixed(3)}°E</td>
+                      <td class="p-3.5 text-slate-200">${hab.population.toLocaleString()}</td>
+                      <td class="p-3.5 text-slate-300">${hab.slope_deg}° | ${hab.annual_rainfall_mm}mm</td>
+                      <td class="p-3.5 font-semibold text-amber-400">${hab.hazard?.composite_hazard_score || 0}</td>
+                      <td class="p-3.5 text-slate-300">
+                        ${hab.capacity?.safe_estimated_capacity || 0}
+                        ${hab.capacity?.overcapacity_count ? `<span class="ml-1 text-[10px] text-red-400 font-bold">(+${hab.capacity.overcapacity_count})</span>` : ''}
+                      </td>
+                      <td class="p-3.5">
+                        <span class="inline-block rounded-full px-2 py-0.5 text-[10px] font-bold text-white" style="background-color: ${getRiskColor(hab.risk?.risk_category)}">
+                          ${hab.risk?.risk_category || 'Low'} (${hab.risk?.overall_risk_score || 0})
+                        </span>
+                      </td>
+                      <td class="p-3.5 text-right">
+                        <button onclick="viewHabitationDetail('${hab.id}')" class="rounded bg-blue-600 px-2.5 py-1 text-[10px] font-bold text-white hover:bg-blue-500">
+                          Profile & PDF →
+                        </button>
+                      </td>
+                    </tr>
+                  `).join('')}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    // Single Habitation Profile View
+    function renderHabitationDetail(hab) {
+      return `
+        <div class="space-y-6">
+          <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+            <div class="flex items-center gap-3">
+              <button onclick="state.selectedHabitation = null; renderApp();" class="rounded-lg border border-slate-800 bg-slate-900 p-2 text-slate-400 hover:text-white">
+                ← Back
+              </button>
+              <div>
+                <span class="text-xs font-mono text-blue-400">${hab.habitation_code} | ${hab.district}, ${hab.state}</span>
+                <h2 class="text-xl font-bold tracking-tight text-white">${hab.name}</h2>
+              </div>
+            </div>
+
+            <button onclick="downloadPdfReport('${hab.id}', '${hab.habitation_code}')" class="flex items-center justify-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-xs font-bold text-white shadow-lg shadow-blue-600/20 hover:bg-blue-500">
+              <i data-lucide="download" class="h-4 w-4"></i>
+              <span>Export Official PDF Risk Report</span>
+            </button>
+          </div>
+
+          <!-- Overview Cards -->
+          <div class="grid grid-cols-1 gap-4 md:grid-cols-4">
+            <div class="glass-card p-5 border-2 text-center" style="border-color: ${getRiskColor(hab.risk?.risk_category)}">
+              <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider block">Overall Risk Score</span>
+              <span class="mt-2 text-3xl font-black block" style="color: ${getRiskColor(hab.risk?.risk_category)}">
+                ${hab.risk?.overall_risk_score} / 100
+              </span>
+              <span class="inline-block mt-2 rounded-full px-3 py-0.5 text-xs font-bold text-white uppercase" style="background-color: ${getRiskColor(hab.risk?.risk_category)}">
+                ${hab.risk?.risk_category} Zone
+              </span>
+            </div>
+
+            <div class="glass-card p-5 border-l-4 border-l-amber-500">
+              <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider block">Composite Hazard</span>
+              <span class="mt-2 text-2xl font-black text-amber-400 block">${hab.hazard?.composite_hazard_score} / 100</span>
+              <p class="mt-1 text-[10px] text-slate-400">Landslide (${hab.hazard?.landslide_score}) | Flood (${hab.hazard?.flood_score})</p>
+            </div>
+
+            <div class="glass-card p-5 border-l-4 border-l-blue-500">
+              <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider block">Vulnerability Index</span>
+              <span class="mt-2 text-2xl font-black text-blue-400 block">${hab.vulnerability?.composite_vulnerability_score} / 100</span>
+              <p class="mt-1 text-[10px] text-slate-400">Social Density & Emergency Isolation</p>
+            </div>
+
+            <div class="glass-card p-5 border-l-4 border-l-purple-500">
+              <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider block">Relocation Priority</span>
+              <span class="mt-2 text-2xl font-black text-purple-400 block">${hab.priority?.priority_score} / 100</span>
+              <p class="mt-1 text-[10px] font-semibold text-purple-300">${hab.priority?.priority_category}</p>
+            </div>
+          </div>
+
+          <!-- XAI Contributing Factors -->
+          <div class="glass-card p-5">
+            <h3 class="text-sm font-bold text-white mb-4 border-b border-slate-800 pb-2">Explainable AI (XAI) Risk Contributing Factors</h3>
+            <div class="space-y-3">
+              ${(hab.risk?.contributing_factors || []).map(f => `
+                <div class="space-y-1.5 rounded-lg bg-slate-950 p-3 border border-slate-800">
+                  <div class="flex justify-between items-center text-xs">
+                    <span class="font-bold text-slate-200">${f.factor}</span>
+                    <span class="font-bold text-blue-400">${f.impact_pct}% Impact</span>
+                  </div>
+                  <div class="h-2 w-full overflow-hidden rounded-full bg-slate-800">
+                    <div class="h-full bg-gradient-to-r from-blue-600 to-indigo-500 rounded-full" style="width: ${f.impact_pct}%"></div>
+                  </div>
+                </div>
+              `).join('')}
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    // Relocation Target Sites View
+    function renderRelocationSites() {
+      return `
+        <div class="space-y-6">
+          <div>
+            <h2 class="text-xl font-bold tracking-tight text-white">Relocation Candidate Target Sites</h2>
+            <p class="text-xs text-slate-400">Manage safe target zones, available land, and suitability metrics</p>
+          </div>
+
+          <div class="grid grid-cols-1 gap-4 md:grid-cols-3">
+            ${state.relocationSites.map(site => `
+              <div class="glass-card p-5 border-l-4 border-l-blue-500 space-y-3">
+                <div>
+                  <span class="text-[10px] font-mono text-blue-400 font-semibold">${site.site_code}</span>
+                  <h3 class="text-base font-bold text-white">${site.name}</h3>
+                  <span class="text-xs text-slate-400">${site.district} District</span>
+                </div>
+                <div class="grid grid-cols-2 gap-2 text-xs pt-2 border-t border-slate-800">
+                  <div class="bg-slate-950 p-2 rounded border border-slate-800">
+                    <span class="text-slate-400 text-[10px] block">Available Land</span>
+                    <span class="font-bold text-white">${site.available_land_sq_km} sq km</span>
+                  </div>
+                  <div class="bg-slate-950 p-2 rounded border border-slate-800">
+                    <span class="text-slate-400 text-[10px] block">Target Capacity</span>
+                    <span class="font-bold text-emerald-400">${site.target_population_capacity.toLocaleString()}</span>
+                  </div>
+                </div>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+      `;
+    }
+
+    // ML Studio View
+    function renderMlStudio() {
+      return `
+        <div class="space-y-6">
+          <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+            <div>
+              <h2 class="text-xl font-bold tracking-tight text-white">AI/ML Model Studio & Explainability</h2>
+              <p class="text-xs text-slate-400">Supervised classification models (Random Forest, XGBoost, Logistic Regression) & SHAP feature importances</p>
+            </div>
+            <button onclick="triggerTrainMl()" class="flex items-center justify-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-xs font-bold text-white shadow-lg shadow-blue-600/20 hover:bg-blue-500">
+              <i data-lucide="play" class="h-4 w-4"></i>
+              <span>Train ML Pipeline</span>
+            </button>
+          </div>
+        </div>
+      `;
+    }
+
+    // Data Upload View
+    function renderDataUpload() {
+      return `
+        <div class="space-y-6">
+          <div>
+            <h2 class="text-xl font-bold tracking-tight text-white">Habitation Data Ingestion & Quality Validation</h2>
+            <p class="text-xs text-slate-400">Upload CSV datasets & validate spatial coordinates, missing values, and negative populations</p>
+          </div>
+
+          <div class="glass-card p-6 max-w-lg border-2 border-dashed border-slate-800 text-center space-y-4">
+            <div class="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-blue-950/60 border border-blue-800 text-blue-400">
+              <i data-lucide="upload-cloud" class="h-7 w-7"></i>
+            </div>
+            <input id="csv-file" type="file" accept=".csv" class="block w-full text-xs text-slate-400 file:mr-4 file:rounded-lg file:border-0 file:bg-slate-800 file:py-2 file:px-4 file:text-xs file:font-semibold file:text-slate-200" />
+            <button onclick="handleCsvUpload()" class="w-full rounded-lg bg-blue-600 py-2.5 text-xs font-bold text-white shadow-lg shadow-blue-600/20 hover:bg-blue-500">
+              Upload & Run Validation Pipeline
+            </button>
+          </div>
+        </div>
+      `;
+    }
+
+    // Settings View
+    function renderSettings() {
+      const c = state.mcdaConfig || {};
+      return `
+        <div class="space-y-6">
+          <div>
+            <h2 class="text-xl font-bold tracking-tight text-white">System Risk Model Configuration</h2>
+            <p class="text-xs text-slate-400">MCDA model weights ($w_H, w_V, w_{CP}, w_{IR}, w_{Hist}$) & threshold cutoffs</p>
+          </div>
+        </div>
+      `;
+    }
+
+    // Interactive Functions
+    async function triggerRunAnalysis() {
+      await api.post('/analysis/run');
+      await loadAllData();
+      renderApp();
+    }
+
+    async function viewHabitationDetail(id) {
+      const res = await api.get(`/habitations/${id}`);
+      state.selectedHabitation = res.data;
+      renderApp();
+    }
+
+    async function downloadPdfReport(id, code) {
+      const res = await api.get(`/reports/risk/${id}`, { responseType: 'blob' });
+      const url = window.URL.createObjectURL(new Blob([res.data], { type: 'application/pdf' }));
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', `Risk_Report_${code}.pdf`);
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+    }
+
+    async function handleCsvUpload() {
+      const input = document.getElementById('csv-file');
+      if (!input || !input.files[0]) return;
+      const formData = new FormData();
+      formData.append('file', input.files[0]);
+      await api.post('/data/upload', formData, { headers: { 'Content-Type': 'multipart/form-data' } });
+      await loadAllData();
+      switchTab('habitations');
+    }
+
+    // Post Render Maps & Charts Initialization
+    function postRender() {
+      if (state.activeTab === 'dashboard' && !state.selectedHabitation) {
+        // Render Pie Chart
+        const pieCtx = document.getElementById('riskPieChart');
+        if (pieCtx) {
+          const s = state.summary || {};
+          new Chart(pieCtx, {
+            type: 'doughnut',
+            data: {
+              labels: ['Critical Red Zone', 'High Risk', 'Moderate Risk', 'Low Risk'],
+              datasets: [{
+                data: [s.critical_zones || 0, s.high_risk_zones || 0, s.moderate_risk_zones || 0, s.low_risk_zones || 0],
+                backgroundColor: ['#EF4444', '#F97316', '#F59E0B', '#10B981']
+              }]
+            },
+            options: { responsive: true, plugins: { legend: { labels: { color: '#94a3b8', font: { size: 11 } } } } }
+          });
+        }
+
+        // Render Bar Chart
+        const barCtx = document.getElementById('capacityBarChart');
+        if (barCtx) {
+          const topHabs = state.habitations.slice(0, 6);
+          new Chart(barCtx, {
+            type: 'bar',
+            data: {
+              labels: topHabs.map(h => h.name),
+              datasets: [
+                { label: 'Population', data: topHabs.map(h => h.population), backgroundColor: '#EF4444' },
+                { label: 'Safe Capacity', data: topHabs.map(h => h.capacity?.safe_estimated_capacity || 0), backgroundColor: '#10B981' }
+              ]
+            },
+            options: { responsive: true, scales: { x: { ticks: { color: '#64748b', font: { size: 10 } } }, y: { ticks: { color: '#64748b', font: { size: 10 } } } }, plugins: { legend: { labels: { color: '#94a3b8', font: { size: 11 } } } } }
+          });
+        }
+
+        // Render Quick Map
+        const mapContainer = document.getElementById('quick-map');
+        if (mapContainer) {
+          const map = L.map('quick-map').setView([30.3753, 79.3312], 9);
+          L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+
+          state.habitations.forEach(hab => {
+            const circle = L.circleMarker([hab.latitude, hab.longitude], {
+              radius: hab.risk?.risk_category === 'Critical' ? 9 : 6,
+              fillColor: getRiskColor(hab.risk?.risk_category),
+              color: '#0f172a',
+              weight: 2,
+              fillOpacity: 0.9
+            }).addTo(map);
+            circle.bindPopup(`<b>${hab.name}</b><br>Risk: ${hab.risk?.overall_risk_score} (${hab.risk?.risk_category})`);
+          });
+        }
+      }
+
+      if (state.activeTab === 'gis-map') {
+        const fullMapContainer = document.getElementById('full-gis-map');
+        if (fullMapContainer) {
+          const fullMap = L.map('full-gis-map').setView([30.3753, 79.3312], 9);
+          L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(fullMap);
+
+          state.habitations.forEach(hab => {
+            const circle = L.circleMarker([hab.latitude, hab.longitude], {
+              radius: hab.risk?.risk_category === 'Critical' ? 10 : 7,
+              fillColor: getRiskColor(hab.risk?.risk_category),
+              color: '#ffffff',
+              weight: 2,
+              fillOpacity: 0.9
+            }).addTo(fullMap);
+            circle.bindPopup(`<b>${hab.name}</b><br>Population: ${hab.population}<br>Risk: ${hab.risk?.overall_risk_score} (${hab.risk?.risk_category})`);
+          });
+
+          state.relocationSites.forEach(site => {
+            const siteMarker = L.circleMarker([site.latitude, site.longitude], {
+              radius: 9,
+              fillColor: '#2563EB',
+              color: '#93C5FD',
+              weight: 2,
+              fillOpacity: 0.95
+            }).addTo(fullMap);
+            siteMarker.bindPopup(`<b>Target Site: ${site.name}</b><br>Capacity: ${site.target_population_capacity} persons`);
+          });
+        }
+      }
+    }
+
+    // Initialize App on DOM Load
+    window.addEventListener('DOMContentLoaded', async () => {
+      if (state.token) await loadAllData();
+      renderApp();
+    });
+  </script>
+</body>
+</html>

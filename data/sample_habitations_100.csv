@@ -1,0 +1,101 @@
+habitation_code,name,district,state,latitude,longitude,population,households,area_sq_km,elevation_m,slope_deg,aspect,soil_type,land_use,annual_rainfall_mm,distance_to_river_m,distance_to_road_m,distance_to_hospital_m,water_availability_index,housing_quality_index,safe_land_area_sq_km,water_capacity_persons,healthcare_capacity_persons,road_capacity_persons,flood_history_count,landslide_history_count
+HAB001,Dharchula Lower,Chamoli,Uttarakhand,30.8899,78.9898,1293,236,3.21,2579.0,8.4,West,Clay-Loam,Residential,1315.5,852.7,3933.0,13996.4,79.4,72.1,1.15,1240,898,1804,3,0
+HAB002,Berinag Ridge,Uttarkashi,Uttarakhand,30.3334,78.9306,2907,627,2.02,1485.9,18.4,South,Clay-Loam,Forest Fringe Settlement,2156.7,480.7,5998.8,2996.6,56.1,67.7,1.2,2585,1844,2196,2,0
+HAB003,Didihat Sector 2,Chamoli,Uttarakhand,31.0264,80.233,3263,671,3.04,1497.9,19.4,South-East,Rocky Slates,Forest Fringe Settlement,3254.3,2285.7,3978.9,5102.0,80.1,39.8,1.03,4540,3093,3737,2,0
+HAB004,Srinagar Upper,Rudraprayag,Uttarakhand,30.9862,80.1101,3436,708,1.34,2683.0,39.2,South-West,Silt-Clay,Forest Fringe Settlement,2248.2,3102.2,4196.4,4457.5,47.7,74.7,0.56,4114,2748,4009,0,0
+HAB005,Karnaprayag Khet,Pithoragarh,Uttarakhand,30.1091,78.5942,1048,223,1.14,2145.0,28.3,West,Moraine Soil,Forest Fringe Settlement,3391.1,1875.4,6313.5,20825.8,40.6,73.2,0.56,1078,719,1270,0,1
+HAB006,Nandaprayag Basti,Pithoragarh,Uttarakhand,30.0039,79.9442,2307,400,3.55,1790.7,9.2,South,Alluvial Deposits,Forest Fringe Settlement,1557.5,1340.0,1092.0,22939.8,90.7,85.1,1.6,2285,1334,2284,3,0
+HAB007,Badrinath Upper,Rudraprayag,Uttarakhand,31.0536,80.3939,851,156,3.76,2754.9,25.8,East,Silt-Clay,Forest Fringe Settlement,2193.1,1946.8,1759.6,21091.5,63.3,42.7,1.58,1007,545,807,2,3
+HAB008,Ghat Ghar,Tehri Garhwal,Uttarakhand,30.5418,78.9958,674,136,2.85,1221.7,13.6,North-East,Clay-Loam,Residential,1255.0,158.4,2181.3,12922.8,55.3,59.1,1.2,794,753,782,0,0
+HAB009,Pauri Ridge,Rudraprayag,Uttarakhand,30.1132,79.818,3052,604,2.37,2244.6,31.3,North-East,Clay-Loam,Agricultural-Residential,2774.9,2812.0,754.8,5568.3,69.5,38.4,0.57,2960,3394,2320,3,4
+HAB010,Lansdowne Khet,Chamoli,Uttarakhand,30.0607,80.4986,270,46,4.21,2489.8,11.5,North-West,Moraine Soil,Residential,3088.7,3163.4,1111.9,1249.1,61.5,85.6,2.28,223,266,346,3,1
+HAB011,Munsyari Ghar,Rudraprayag,Uttarakhand,30.2279,78.9354,629,119,2.67,2283.3,7.2,North-West,Alluvial Deposits,Forest Fringe Settlement,1462.1,3364.7,566.7,5436.8,72.7,70.5,0.71,437,706,564,1,0
+HAB012,Bhatwari Lower,Pithoragarh,Uttarakhand,30.7888,79.6305,2741,479,1.32,2218.2,14.3,West,Silt-Clay,Forest Fringe Settlement,2584.7,1627.4,6042.2,22534.7,40.5,67.3,0.57,1863,2402,3028,0,0
+HAB013,Rishikesh Lower,Rudraprayag,Uttarakhand,30.4434,78.8155,4600,849,2.95,2773.8,30.5,North,Alluvial Deposits,Agricultural-Residential,3243.0,407.4,5713.9,7229.8,88.9,74.5,0.67,3796,2978,4481,2,3
+HAB014,Lansdowne Sector 2,Tehri Garhwal,Uttarakhand,30.5862,80.3107,566,122,2.19,1317.2,5.1,East,Rocky Slates,Residential,2804.8,1953.3,2808.6,1420.5,44.1,83.0,1.32,586,613,659,0,0
+HAB015,Karnaprayag Upper,Uttarkashi,Uttarakhand,30.4376,80.3662,476,83,1.34,1261.5,9.0,West,Alluvial Deposits,Forest Fringe Settlement,1455.5,3258.1,5626.7,23457.5,84.6,82.9,0.22,566,348,687,3,1
+HAB016,Lansdowne Sector 1,Uttarkashi,Uttarakhand,30.191,79.9026,3283,582,3.93,1206.0,36.8,North-West,Rocky Slates,Agricultural-Residential,2987.2,3056.1,1487.9,16248.8,61.9,46.7,0.73,4000,2448,3636,2,4
+HAB017,Purola Valley,Chamoli,Uttarakhand,30.1384,80.4408,1612,306,4.43,828.4,28.3,South-West,Rocky Slates,Agricultural-Residential,2494.3,1814.4,2534.5,14346.2,54.0,72.5,0.67,2160,1413,2056,2,3
+HAB018,Munsyari Sector 1,Uttarkashi,Uttarakhand,30.5176,80.3977,2854,537,3.15,1005.5,40.1,South,Moraine Soil,Agricultural-Residential,2025.5,1070.0,871.0,10786.2,91.7,70.6,1.89,3117,2028,3248,0,1
+HAB019,Bhararisain Sector 1,Pithoragarh,Uttarakhand,30.9429,79.7133,2789,546,2.27,1188.1,23.5,East,Clay-Loam,Agricultural-Residential,2285.5,2233.6,2212.0,19860.1,81.3,70.4,0.6,2117,1442,2498,1,2
+HAB020,Lansdowne Lower,Pithoragarh,Uttarakhand,30.4973,79.7595,1742,320,2.04,1569.3,10.8,North,Clay-Loam,Agricultural-Residential,1603.3,2824.2,4538.6,11791.7,70.7,85.0,0.43,1231,1437,1959,1,1
+HAB021,Tharali Ghar,Tehri Garhwal,Uttarakhand,30.978,80.284,3645,653,2.69,2589.3,34.0,North-West,Moraine Soil,Agricultural-Residential,2829.1,2947.5,1838.7,18931.0,66.7,44.4,1.0,4267,2420,3530,1,0
+HAB022,Karnaprayag Basti,Rudraprayag,Uttarakhand,30.4596,78.8056,1902,414,2.13,1862.4,21.2,South-East,Moraine Soil,Agricultural-Residential,3181.1,2065.1,4536.1,20733.5,82.1,52.8,0.33,1676,1954,2630,3,0
+HAB023,Purola Khet,Tehri Garhwal,Uttarakhand,31.0774,79.4765,2385,470,0.62,1439.1,31.5,West,Silt-Clay,Agricultural-Residential,3214.9,3433.5,3495.1,21878.0,72.6,69.8,0.12,2248,2639,2016,0,1
+HAB024,Tharali Sector 1,Pithoragarh,Uttarakhand,30.3922,80.0225,3255,669,4.3,1614.2,37.6,North-West,Clay-Loam,Forest Fringe Settlement,2340.7,3499.7,2307.2,16023.3,83.0,69.1,2.27,4425,2081,2331,0,0
+HAB025,Karnaprayag Ghar,Chamoli,Uttarakhand,30.6768,78.9359,2249,409,1.17,1994.9,34.2,North-East,Silt-Clay,Agricultural-Residential,1348.6,138.6,2062.1,16643.5,92.7,53.8,0.59,1486,2211,2702,0,3
+HAB026,Didihat Sector 2,Tehri Garhwal,Uttarakhand,30.9666,80.0925,4786,867,1.89,1628.2,19.5,South-West,Clay-Loam,Agricultural-Residential,2991.4,414.1,6247.1,15691.3,85.6,72.4,0.7,5681,5627,4384,3,1
+HAB027,Didihat Ghar,Pithoragarh,Uttarakhand,30.5227,79.9621,2348,477,1.48,2666.0,15.9,North-West,Silt-Clay,Agricultural-Residential,2410.7,2355.3,2219.8,12470.2,57.9,59.3,0.48,1894,1633,2763,0,1
+HAB028,Raini Khet,Rudraprayag,Uttarakhand,30.1027,79.9401,4152,795,1.46,1726.0,32.8,North-West,Clay-Loam,Residential,1776.7,1445.2,1619.3,16338.3,60.3,63.2,0.47,5801,3675,4074,1,1
+HAB029,Bhararisain Sector 2,Rudraprayag,Uttarakhand,30.1448,78.8852,1129,206,4.3,2164.8,12.5,North-West,Rocky Slates,Forest Fringe Settlement,2456.0,2672.7,3899.3,23555.6,85.8,47.8,1.42,950,1124,904,0,0
+HAB030,Purola Sector 2,Rudraprayag,Uttarakhand,30.7654,80.0056,990,175,2.8,1712.3,22.2,East,Clay-Loam,Agricultural-Residential,3264.4,1698.2,5352.6,10336.1,44.1,67.8,0.5,712,885,933,0,0
+HAB031,Purola Ridge,Tehri Garhwal,Uttarakhand,30.7154,79.7368,4430,886,4.13,1359.6,28.0,West,Rocky Slates,Forest Fringe Settlement,2528.4,2153.2,4823.6,22805.1,51.4,42.7,1.98,3214,2753,3367,0,1
+HAB032,Devprayag Gaon,Pithoragarh,Uttarakhand,30.3495,78.963,2466,455,2.32,2159.1,41.0,South-East,Moraine Soil,Residential,2352.5,2284.3,5909.3,20047.2,43.9,40.0,0.7,2957,2215,2295,0,1
+HAB033,Berinag Sector 2,Pithoragarh,Uttarakhand,31.1312,79.5009,4195,827,2.89,2573.3,33.6,South,Clay-Loam,Residential,1626.5,2376.3,5600.3,14586.4,41.1,75.9,1.62,4450,4338,3524,1,3
+HAB034,Devprayag Sector 2,Rudraprayag,Uttarakhand,31.1963,79.3718,4178,725,2.38,1587.1,17.5,North-East,Silt-Clay,Agricultural-Residential,2046.8,1759.4,4323.7,10330.3,81.8,32.2,0.46,3350,2428,5506,3,1
+HAB035,Srinagar Upper,Tehri Garhwal,Uttarakhand,30.5544,78.6084,4397,884,3.53,2032.1,34.6,South-East,Rocky Slates,Forest Fringe Settlement,1401.3,1043.7,5731.5,12251.4,41.6,67.8,1.94,5134,3154,3126,1,0
+HAB036,Badrinath Lower,Pithoragarh,Uttarakhand,31.1365,79.7954,1411,274,3.37,1793.2,15.7,North-West,Moraine Soil,Residential,2150.6,549.0,1279.4,14865.8,81.0,38.2,0.62,1718,1549,1371,3,1
+HAB037,Ukhimath Upper,Uttarkashi,Uttarakhand,30.8713,80.175,4161,739,2.29,1742.9,18.0,West,Moraine Soil,Agricultural-Residential,3100.1,3433.7,1590.3,9931.7,87.1,54.6,0.71,4071,4741,4181,2,1
+HAB038,Karnaprayag Ghar,Chamoli,Uttarakhand,30.1515,80.4307,2869,509,4.0,1652.6,25.5,North-West,Clay-Loam,Forest Fringe Settlement,1431.6,3054.7,6306.2,2906.1,83.0,45.9,1.85,2633,1595,2762,2,4
+HAB039,Purola Ridge,Uttarkashi,Uttarakhand,30.7522,80.2749,4147,736,0.64,890.3,29.6,South,Silt-Clay,Forest Fringe Settlement,1307.9,3425.3,4954.4,17248.7,45.5,40.0,0.19,2584,3015,3089,0,1
+HAB040,Nandaprayag Basti,Rudraprayag,Uttarakhand,30.6374,79.6319,1625,344,0.82,2535.2,29.2,South-East,Moraine Soil,Forest Fringe Settlement,1429.2,1641.0,1688.2,7021.4,40.5,78.3,0.49,1855,992,1711,0,2
+HAB041,Bhararisain Ridge,Uttarkashi,Uttarakhand,30.5482,79.1042,3301,588,0.93,1531.8,19.0,South,Rocky Slates,Residential,3349.3,2320.9,1820.4,14103.2,77.7,74.7,0.16,3581,2798,4698,0,0
+HAB042,Bhatwari Valley,Rudraprayag,Uttarakhand,30.7639,79.7418,1270,238,4.11,2075.0,17.0,North-West,Clay-Loam,Forest Fringe Settlement,1939.2,503.4,5917.1,8649.2,62.9,42.0,2.23,1652,960,1398,0,0
+HAB043,Ukhimath Ghar,Uttarkashi,Uttarakhand,30.8959,79.1774,1093,213,0.8,2296.0,13.8,West,Alluvial Deposits,Agricultural-Residential,1307.7,1411.3,1755.8,4017.8,60.3,74.9,0.22,988,1035,1089,2,0
+HAB044,Chinyalisaur Upper,Tehri Garhwal,Uttarakhand,31.0611,79.6228,1963,367,3.04,1701.7,32.3,West,Clay-Loam,Residential,1204.3,178.4,6473.7,3847.5,52.9,62.3,1.05,1760,2286,2467,1,1
+HAB045,Dharasu Basti,Pithoragarh,Uttarakhand,30.7859,80.1674,3493,610,1.62,2165.1,13.5,North-West,Silt-Clay,Agricultural-Residential,1328.5,2415.6,3561.8,23494.8,59.7,53.9,0.4,2437,3820,3715,2,0
+HAB046,Dharchula Gaon,Chamoli,Uttarakhand,30.0607,79.167,1181,213,1.32,2451.1,26.6,South-East,Silt-Clay,Agricultural-Residential,2881.0,2770.8,3894.1,7521.9,94.1,89.3,0.55,1463,681,1645,0,0
+HAB047,Ghat Sector 1,Tehri Garhwal,Uttarakhand,30.3885,78.8485,579,124,2.18,983.0,7.5,North-West,Rocky Slates,Forest Fringe Settlement,2465.4,1609.4,1479.0,15224.4,80.0,84.5,1.05,487,550,419,1,0
+HAB048,Nandaprayag Lower,Pithoragarh,Uttarakhand,30.8549,79.3871,811,164,1.09,1008.7,29.3,South-West,Moraine Soil,Forest Fringe Settlement,2320.3,1615.3,3955.0,3461.3,78.6,81.2,0.52,985,814,707,1,0
+HAB049,Nandaprayag Valley,Pithoragarh,Uttarakhand,30.4785,79.9592,2710,536,3.16,1517.3,11.0,North-West,Clay-Loam,Residential,3013.1,371.6,672.8,18044.5,84.6,63.4,1.4,2843,1980,2161,0,1
+HAB050,Didihat Ridge,Chamoli,Uttarakhand,31.1621,79.7008,3030,653,2.53,1067.2,23.8,North-East,Rocky Slates,Forest Fringe Settlement,1945.4,2681.0,3752.9,19604.6,86.5,88.5,1.41,3305,2878,2184,2,4
+HAB051,Berinag Sector 2,Chamoli,Uttarakhand,30.2165,79.9054,2681,470,1.9,1121.9,10.6,West,Clay-Loam,Residential,2804.2,3402.7,641.8,13295.0,60.7,57.2,0.43,2276,1949,3895,1,0
+HAB052,Rishikesh Upper,Rudraprayag,Uttarakhand,30.1889,79.7357,818,168,3.15,1745.6,22.2,South,Silt-Clay,Forest Fringe Settlement,1361.8,1533.2,1876.9,16669.5,66.8,70.0,0.54,749,752,577,0,0
+HAB053,Didihat Basti,Uttarkashi,Uttarakhand,30.3473,78.74,4224,772,1.2,1529.4,32.4,South-West,Clay-Loam,Agricultural-Residential,3082.1,195.9,170.9,22202.5,87.4,64.5,0.52,4931,3347,3345,0,1
+HAB054,Guptkashi Gaon,Pithoragarh,Uttarakhand,30.9984,80.3395,871,171,0.92,1643.1,20.6,North-East,Moraine Soil,Agricultural-Residential,2815.4,814.4,5075.3,2941.4,74.8,61.8,0.23,1063,649,1277,2,0
+HAB055,Badrinath Lower,Rudraprayag,Uttarakhand,30.3072,78.847,1402,255,3.12,1113.1,35.1,North-West,Moraine Soil,Forest Fringe Settlement,2847.7,1598.7,6010.8,14070.4,74.9,67.5,1.82,1544,849,1057,1,3
+HAB056,Bhararisain Sector 2,Tehri Garhwal,Uttarakhand,30.0674,79.5147,2692,527,0.65,1505.9,16.2,North-East,Alluvial Deposits,Forest Fringe Settlement,2266.3,1646.4,3625.3,19253.4,89.3,57.0,0.36,3018,1951,2908,0,0
+HAB057,Devprayag Lower,Uttarkashi,Uttarakhand,31.1789,78.6687,1563,343,3.33,2781.5,25.4,East,Rocky Slates,Agricultural-Residential,3211.3,1386.6,5045.3,16678.9,42.9,67.9,1.06,1350,1391,1577,0,3
+HAB058,Lansdowne Gaon,Rudraprayag,Uttarakhand,30.4,79.6655,1308,229,1.74,2094.9,30.8,East,Alluvial Deposits,Forest Fringe Settlement,3257.4,1118.1,2479.6,19249.9,84.7,70.2,0.98,1557,1281,1466,2,3
+HAB059,Nandaprayag Khet,Uttarkashi,Uttarakhand,30.0219,79.1177,1904,385,3.56,1143.6,44.0,East,Clay-Loam,Agricultural-Residential,3042.2,398.9,5022.1,20240.7,88.6,32.3,1.13,2309,1126,1906,0,0
+HAB060,Srinagar Gaon,Rudraprayag,Uttarakhand,30.8654,78.5874,3134,582,1.45,1660.6,16.1,North-West,Silt-Clay,Forest Fringe Settlement,1650.1,3381.3,5109.2,21810.6,50.7,70.7,0.63,2985,3254,4144,1,1
+HAB061,Nandaprayag Basti,Rudraprayag,Uttarakhand,30.9615,78.7768,2198,481,2.42,1511.0,41.4,North-East,Rocky Slates,Residential,2855.2,991.1,5889.2,4559.5,64.1,86.8,0.63,2112,1636,1585,0,1
+HAB062,Barkot Valley,Rudraprayag,Uttarakhand,30.4634,78.6632,1989,438,4.22,2470.3,30.3,East,Silt-Clay,Residential,1759.8,2912.7,4539.7,4364.5,78.8,56.9,0.64,1319,1350,2720,1,3
+HAB063,Bhatwari Khet,Pithoragarh,Uttarakhand,30.1334,79.0762,2617,561,1.45,2059.9,29.3,North-East,Clay-Loam,Agricultural-Residential,2472.5,106.7,3374.2,6716.2,47.9,55.8,0.66,2073,2071,3222,0,2
+HAB064,Ghat Lower,Tehri Garhwal,Uttarakhand,30.6529,80.0728,4308,825,2.06,1713.8,29.8,South-West,Rocky Slates,Forest Fringe Settlement,1137.4,2770.4,2274.0,17911.1,74.6,76.3,1.07,3730,2287,4897,3,3
+HAB065,Guptkashi Ghar,Pithoragarh,Uttarakhand,30.7581,80.123,666,122,4.27,825.8,12.9,South-East,Clay-Loam,Agricultural-Residential,3246.8,1828.1,6429.8,13581.1,53.9,75.2,1.05,589,697,927,0,0
+HAB066,Pipalkoti Valley,Pithoragarh,Uttarakhand,31.0674,79.9866,3317,671,1.25,2168.7,19.3,South,Clay-Loam,Forest Fringe Settlement,2076.3,1535.6,6468.4,5314.4,56.2,36.2,0.39,2774,2693,4226,0,1
+HAB067,Devprayag Valley,Pithoragarh,Uttarakhand,30.0508,80.2401,3038,573,2.24,2060.9,35.9,North,Clay-Loam,Forest Fringe Settlement,2566.3,1303.4,5217.1,16690.6,92.4,38.6,1.02,3721,1593,2290,3,3
+HAB068,Ghat Valley,Pithoragarh,Uttarakhand,31.1394,78.5648,1406,261,4.3,1512.6,34.8,East,Alluvial Deposits,Agricultural-Residential,2015.5,2291.0,1660.0,3786.6,80.5,59.9,1.48,1475,960,1276,1,0
+HAB069,Bhatwari Sector 2,Pithoragarh,Uttarakhand,30.2402,78.7715,756,148,4.09,1662.5,8.4,South-West,Rocky Slates,Forest Fringe Settlement,1249.4,1920.5,5799.1,20611.1,79.1,85.6,1.92,933,647,602,0,0
+HAB070,Badrinath Ghar,Chamoli,Uttarakhand,30.4331,79.6446,3978,717,2.71,2004.5,8.4,South,Moraine Soil,Forest Fringe Settlement,2753.4,1863.7,5011.1,19972.1,44.1,88.3,1.28,3818,3882,3880,3,1
+HAB071,Dharchula Gaon,Rudraprayag,Uttarakhand,30.9213,78.7581,4269,751,0.72,1004.5,11.0,East,Silt-Clay,Agricultural-Residential,3249.9,827.9,6161.3,13030.9,55.6,34.7,0.18,5827,2954,5122,1,1
+HAB072,Gauchar Khet,Rudraprayag,Uttarakhand,30.7102,79.6613,1552,289,3.38,1990.5,37.9,North,Clay-Loam,Residential,1204.6,2263.0,3770.2,16045.8,82.2,55.0,1.59,1549,1457,1446,0,1
+HAB073,Badrinath Ridge,Uttarkashi,Uttarakhand,30.5443,79.8772,1444,284,2.44,1168.2,28.7,South-West,Rocky Slates,Forest Fringe Settlement,3372.5,1241.5,2621.7,18543.2,68.3,36.4,0.66,1007,1176,1173,0,1
+HAB074,Pokhari Gaon,Pithoragarh,Uttarakhand,30.2979,80.2306,1458,262,4.24,2228.3,12.4,East,Moraine Soil,Forest Fringe Settlement,2173.7,3082.8,3258.0,3253.1,61.6,57.4,1.15,1555,778,1348,1,1
+HAB075,Munsyari Ghar,Uttarkashi,Uttarakhand,30.644,80.1943,3680,787,1.56,1499.8,20.7,North,Moraine Soil,Residential,2411.6,721.6,3618.3,2876.5,67.7,75.9,0.45,5119,3592,2925,0,0
+HAB076,Ghat Valley,Tehri Garhwal,Uttarakhand,31.1267,80.0099,1780,336,2.11,832.5,6.5,South-West,Moraine Soil,Forest Fringe Settlement,2151.1,2141.6,3375.0,8677.6,73.7,39.8,1.36,2120,1262,1724,3,1
+HAB077,Purola Ghar,Tehri Garhwal,Uttarakhand,30.3597,80.1315,3167,642,0.94,1603.9,17.0,North,Alluvial Deposits,Agricultural-Residential,1710.7,2311.8,6319.8,14389.2,52.5,33.1,0.37,3228,3182,4179,1,0
+HAB078,Srinagar Sector 1,Chamoli,Uttarakhand,30.6871,79.901,1712,378,1.75,1060.4,31.9,West,Alluvial Deposits,Forest Fringe Settlement,3217.2,3061.2,4796.2,2620.0,47.6,42.4,0.55,1934,1485,1628,0,1
+HAB079,Purola Valley,Tehri Garhwal,Uttarakhand,30.4251,80.044,2315,437,1.27,1255.4,26.8,South-East,Rocky Slates,Agricultural-Residential,2721.3,2431.3,3204.1,12139.5,70.8,86.1,0.65,1921,2086,2626,1,4
+HAB080,Ghat Basti,Uttarkashi,Uttarakhand,30.0505,80.4106,797,161,2.27,1275.7,23.7,South-East,Alluvial Deposits,Agricultural-Residential,3246.0,2451.8,935.4,15237.4,72.3,44.5,1.1,816,754,591,1,1
+HAB081,Berinag Ghar,Chamoli,Uttarakhand,30.8174,78.7749,4658,807,1.13,2088.4,39.3,North-West,Moraine Soil,Forest Fringe Settlement,1558.7,3375.5,2121.5,15926.5,89.9,35.4,0.49,4788,4686,6751,0,1
+HAB082,Rishikesh Basti,Chamoli,Uttarakhand,31.1966,79.294,4208,887,3.5,2538.2,16.3,North,Clay-Loam,Agricultural-Residential,2406.3,420.2,6390.3,7688.0,94.4,62.6,1.39,5684,4610,4521,0,0
+HAB083,Tharali Basti,Pithoragarh,Uttarakhand,30.7779,79.9372,265,48,3.66,1914.0,34.5,East,Alluvial Deposits,Forest Fringe Settlement,3163.2,2903.1,3373.6,3177.6,76.8,41.1,0.81,227,178,240,0,1
+HAB084,Didihat Sector 2,Uttarkashi,Uttarakhand,30.3623,79.9458,243,50,1.94,1234.4,31.0,North-West,Rocky Slates,Residential,2032.5,1783.7,5823.5,17241.1,57.1,37.0,1.18,203,226,212,0,1
+HAB085,Karnaprayag Ghar,Tehri Garhwal,Uttarakhand,30.4483,79.9039,4007,730,3.71,2442.5,34.7,North-East,Alluvial Deposits,Agricultural-Residential,2314.8,1298.2,5966.2,3758.4,85.6,84.2,0.93,4124,2465,5544,1,0
+HAB086,Munsyari Sector 1,Tehri Garhwal,Uttarakhand,30.5866,80.2978,3799,684,2.31,1802.2,22.8,North,Alluvial Deposits,Agricultural-Residential,2647.4,1113.2,190.4,7001.6,40.2,43.1,0.43,3567,3762,4304,0,0
+HAB087,Chinyalisaur Upper,Uttarkashi,Uttarakhand,30.4906,80.0379,3593,720,4.07,1669.5,40.8,West,Moraine Soil,Residential,2670.3,2333.2,3528.5,16100.6,59.1,40.7,1.7,3675,3627,3155,0,4
+HAB088,Raini Sector 2,Pithoragarh,Uttarakhand,30.8082,79.5889,4507,902,1.42,1694.3,11.0,South-East,Clay-Loam,Residential,2961.8,1496.4,4991.0,21349.7,40.9,42.4,0.28,2825,4139,5690,0,0
+HAB089,Gangolihat Upper,Pithoragarh,Uttarakhand,30.5268,79.5795,612,130,4.47,1230.0,40.7,South-West,Alluvial Deposits,Forest Fringe Settlement,2876.8,2873.4,1578.0,21178.7,94.2,61.3,1.59,501,544,718,2,0
+HAB090,Dharchula Ridge,Tehri Garhwal,Uttarakhand,30.5947,80.4446,3272,592,1.77,1603.5,10.8,West,Silt-Clay,Forest Fringe Settlement,2189.1,2980.2,1989.7,17332.8,84.3,84.9,0.76,4496,2912,2641,0,0
+HAB091,Kedarnath Valley,Chamoli,Uttarakhand,31.1067,80.1943,907,174,3.82,855.7,19.7,North,Clay-Loam,Residential,2950.7,2077.2,4380.9,6148.0,51.5,84.4,1.15,1203,587,772,2,0
+HAB092,Gangolihat Ghar,Rudraprayag,Uttarakhand,30.8348,79.9075,3399,597,2.71,2339.8,19.8,South-West,Rocky Slates,Agricultural-Residential,1927.2,3095.7,3055.7,19504.2,79.7,75.7,0.84,2591,2444,2503,3,0
+HAB093,Gangolihat Basti,Chamoli,Uttarakhand,30.3129,80.3695,3570,730,1.28,1221.5,27.2,South-East,Moraine Soil,Forest Fringe Settlement,2605.6,2412.7,1709.8,19932.3,93.2,68.5,0.51,2622,3771,2982,2,2
+HAB094,Chinyalisaur Basti,Tehri Garhwal,Uttarakhand,31.1884,80.4145,4442,977,3.89,2687.6,31.1,North,Moraine Soil,Residential,3037.9,848.4,4611.2,1408.4,67.8,52.4,1.79,5034,4138,4826,1,0
+HAB095,Raini Khet,Tehri Garhwal,Uttarakhand,30.4936,78.5335,2400,461,1.65,1779.5,32.2,West,Silt-Clay,Residential,3211.5,1859.1,1604.2,15331.0,53.9,51.3,0.9,1591,2811,2561,0,3
+HAB096,Badrinath Sector 2,Chamoli,Uttarakhand,30.7845,80.2164,409,88,2.02,1883.0,7.2,North,Silt-Clay,Residential,2249.7,1547.0,5109.2,14101.5,87.2,35.7,0.84,259,265,570,1,0
+HAB097,Ukhimath Upper,Chamoli,Uttarakhand,30.8213,79.0607,4598,878,0.63,2654.0,17.3,South-East,Alluvial Deposits,Residential,2830.2,2508.9,2619.0,2954.2,48.9,44.4,0.36,4190,5184,4438,3,1
+HAB098,Karnaprayag Lower,Tehri Garhwal,Uttarakhand,30.8945,79.1917,950,187,3.85,1448.2,35.0,West,Rocky Slates,Residential,2558.5,2753.2,2956.0,6401.6,70.4,52.5,0.94,1015,727,1251,0,4
+HAB099,Badrinath Lower,Chamoli,Uttarakhand,30.3216,79.26,1413,258,1.77,968.4,5.2,South,Moraine Soil,Agricultural-Residential,2851.1,402.7,613.1,11026.3,70.6,60.7,0.36,949,1254,1663,3,0
+HAB100,Lansdowne Ridge,Chamoli,Uttarakhand,30.3502,79.2756,843,154,2.74,2785.1,14.5,East,Moraine Soil,Residential,1419.3,1088.9,3230.6,2642.5,63.9,55.3,1.07,557,570,756,2,0
