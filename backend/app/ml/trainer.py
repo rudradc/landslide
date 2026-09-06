@@ -5,7 +5,11 @@ from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LogisticRegression
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score, confusion_matrix
-import xgboost as xgb
+try:
+    import xgboost as xgb
+    HAS_XGB = True
+except ImportError:
+    HAS_XGB = False
 
 def train_risk_classification_models(habitations_data: list) -> Dict[str, Any]:
     """
@@ -50,11 +54,6 @@ def train_risk_classification_models(habitations_data: list) -> Dict[str, Any]:
     rf_model.fit(X_train, y_train)
     rf_preds = rf_model.predict(X_test)
 
-    # Train XGBoost
-    xgb_model = xgb.XGBClassifier(n_estimators=100, max_depth=4, random_state=42, eval_metric='logloss')
-    xgb_model.fit(X_train, y_train)
-    xgb_preds = xgb_model.predict(X_test)
-
     # Train Logistic Regression
     lr_model = LogisticRegression(max_iter=500, random_state=42)
     lr_model.fit(X_train, y_train)
@@ -76,11 +75,22 @@ def train_risk_classification_models(habitations_data: list) -> Dict[str, Any]:
         }
 
     rf_metrics = get_metrics(rf_preds, "Random Forest Classifier")
-    xgb_metrics = get_metrics(xgb_preds, "XGBoost Classifier")
     lr_metrics = get_metrics(lr_preds, "Logistic Regression")
 
-    # Global Feature Importance from XGBoost
-    importances = xgb_model.feature_importances_.tolist()
+    models_dict = {
+        "random_forest": rf_metrics,
+        "logistic_regression": lr_metrics
+    }
+
+    if HAS_XGB:
+        xgb_model = xgb.XGBClassifier(n_estimators=100, max_depth=4, random_state=42, eval_metric='logloss')
+        xgb_model.fit(X_train, y_train)
+        xgb_preds = xgb_model.predict(X_test)
+        models_dict["xgboost"] = get_metrics(xgb_preds, "XGBoost Classifier")
+        importances = xgb_model.feature_importances_.tolist()
+    else:
+        importances = rf_model.feature_importances_.tolist()
+
     feature_importance = [
         {"feature": name, "importance": round(float(imp), 4)}
         for name, imp in zip(feature_cols, importances)
